@@ -204,6 +204,46 @@ docker run -d --name elasticsearch \
 6. **Open Swagger UI**: http://localhost:8080/swagger-ui.html
 7. **Test the API** using Swagger's interactive interface
 
+
+## Kibana Dashboard
+
+### Setting up Kibana
+
+### Accessing Kibana
+
+```bash
+# Start Kibana with Docker
+docker run -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://localhost:9200" docker.elastic.co/kibana/kibana:8.11.0
+
+# Or if using docker-compose
+docker-compose up kibana
+
+```   
+1. Start Kibana (usually runs on `http://localhost:5601`)
+2. Navigate to the Dev Tools or Dashboard section
+3. Import the sample data or create your own visualizations
+
+### Dashboard Screenshots
+
+![Kibana Overview](src/main/resources/static/images/kibana-overview.jpg)
+*Main Kibana dashboard showing search analytics*
+
+![Search Results Visualization](src/main/resources/static/images/kibana-search-results.jpg)
+*Visualization of search results and performance metrics*
+
+![Index Management](src/main/resources/static/images/kibana-index-management.jpg)
+*Elasticsearch index management in Kibana*
+
+### Key Features Monitored
+
+- Search query performance
+- Index health and statistics
+- Document indexing rates
+- Search result analytics
+- Error tracking and monitoring
+
+
+ 
 ## Features
 - Full CRUD operations with Elasticsearch
 - Advanced search capabilities (text search, filters, ranges)
