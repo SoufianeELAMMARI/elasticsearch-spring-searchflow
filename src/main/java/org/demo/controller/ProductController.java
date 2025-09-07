@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.demo.exception.ProductAlreadyExistsException;
 import org.demo.model.Product;
 import org.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,18 +58,27 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Controller
     @PostMapping
-    @Operation(summary = "Create new product", description = "Create a new product in Elasticsearch")
+    @Operation(summary = "Create new product", description = "Create a new product in Elasticsearch with relations")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product created successfully",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid product data")
+            @ApiResponse(responseCode = "400", description = "Invalid product data"),
+            @ApiResponse(responseCode = "409", description = "Product with same name already exists")
     })
     public ResponseEntity<Product> createProduct(
             @Parameter(description = "Product to create", required = true)
             @Valid @RequestBody Product product) {
-        Product savedProduct = productService.saveProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+
+        try {
+            Product savedProduct = productService.saveProduct(product);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (ProductAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PutMapping("/{id}")

@@ -12,4 +12,6 @@ public interface ProductRepository extends ElasticsearchRepository<Product, Stri
     List<Product> findByNameContaining(String name);
     List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
     List<Product> findByCategoryAndPriceLessThan(String category, Double price);
- }
+    boolean existsByName(String name);
+
+}
